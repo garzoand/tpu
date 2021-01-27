@@ -203,14 +203,22 @@ class DistributedExecuter(object):
   def train_and_eval(self, train_input_fn, eval_input_fn):
     """Run distributed train and eval on Mask RCNN model."""
 
+    logging.info('!!! train_and_eval()')
+    
     self._save_config()
     output_dir = os.path.join(self._flags.model_dir, 'eval')
     tf.gfile.MakeDirs(output_dir)
     summary_writer = tf.summary.FileWriter(output_dir)
 
+    logging.info('!!! build_strategy_configuration()')
     run_config = self.build_strategy_configuration()
+    print(run_config)
+    logging.info('!!! build_model_parameters(train)')
     train_params = self.build_model_parameters('train', run_config)
+    print(train_params)
+    logging.info('!!! build_model_parameters(eval)')
     eval_params = self.build_model_parameters('eval', run_config)
+    print(eval_params)
     train_estimator = self.build_mask_rcnn_estimator(train_params, run_config,
                                                      'train')
     eval_estimator = self.build_mask_rcnn_estimator(eval_params, run_config,
